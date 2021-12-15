@@ -1,0 +1,39 @@
+Deploy Linkerd:
+
+# Download install script and run it
+curl -sL run.linkerd.io/install | sh
+
+# Add the created directory to your PATH
+export PATH=$PATH:$HOME/.linkerd2/bin
+
+# Add the above command to your .bashrc 
+# to make it persistent
+echo "export PATH=$PATH:$HOME/.linkerd2/bin" >> $HOME/.bashrc
+
+# Run linkerd check to make sure your system is ready
+linkerd check --pre
+
+# Install the linkerd control plane
+linkerd install | kubectl apply -f -
+
+# Run linkerd check if the deployment was successful
+linkerd check
+
+
+# Run linkerd viz install and capture the resource yaml
+linkerd viz install > linkerd-viz.yaml
+
+# Download and apply the patch 
+wget https://raw.githubusercontent.com/mattthias/stuff/master/0001-Loosen-policies-for-linkerd-viz.patch
+patch < 0001-Loosen-policies-for-linkerd-viz.patch
+
+# Apply the patched yaml to the cluster
+kubectl apply -f linkerd-viz.yaml
+
+
+# Check if the deployment was successful
+linkerd viz check
+
+
+# Now open the dashboard in your workstation browser <CONTROL_PLAN_NODE>:31500
+
