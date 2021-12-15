@@ -423,6 +423,8 @@ spec:
   client:
     # for kubelet probes and prometheus scraping
     unauthenticated: true
+    networks:
+    - cidr: 0.0.0.0/0
 
 ---
 apiVersion: policy.linkerd.io/v1beta1
@@ -456,7 +458,8 @@ spec:
   client:
     # for kubelet probes
     unauthenticated: true
-
+    networks:
+    - cidr: 0.0.0.0/0
 ---
 ###
 ### Metrics API
@@ -774,6 +777,8 @@ spec:
   client:
     # web, prometheus and the kubelet probes
     unauthenticated: true
+    networks:
+    - cidr: 0.0.0.0/0
 ---
 ###
 ### Prometheus
@@ -1353,6 +1358,8 @@ spec:
   client:
     # traffic coming from kube-api
     unauthenticated: true
+    networks:
+    - cidr: 0.0.0.0/0
 ---
 ###
 ### Web
@@ -1369,14 +1376,14 @@ metadata:
   annotations:
     linkerd.io/created-by: linkerd/helm stable-2.11.1
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     linkerd.io/extension: viz
     component: web
   ports:
   - name: http
     port: 8084
-    targetPort: 8084
+    nodePort: 31500
   - name: admin-http
     port: 9994
     targetPort: 9994
@@ -1422,7 +1429,7 @@ spec:
         - -viz-namespace=linkerd-viz
         - -log-level=info
         - -log-format=plain
-        - -enforced-host=^(localhost|127\.0\.0\.1|web\.linkerd-viz\.svc\.cluster\.local|web\.linkerd-viz\.svc|\[::1\])(:\d+)?$
+        - -enforced-host=
         image: cr.l5d.io/linkerd/web:stable-2.11.1
         imagePullPolicy: IfNotPresent
         livenessProbe:
