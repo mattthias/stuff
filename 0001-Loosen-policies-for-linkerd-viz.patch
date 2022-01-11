@@ -1,29 +1,30 @@
-From 5e7c2994aadc38eb269731fb0fc7d21b42633109 Mon Sep 17 00:00:00 2001
+From 24b8d9fad57b7ebed4f80b6ba45e31bed563b923 Mon Sep 17 00:00:00 2001
 From: Matthias Schmitz <matthias.schmitz@port4949.net>
-Date: Wed, 15 Dec 2021 22:59:33 +0100
+Date: Tue, 11 Jan 2022 23:30:59 +0000
 Subject: [PATCH] Loosen policies for linkerd viz
 
 See the github issues
 https://github.com/linkerd/linkerd2/issues/7233
 for more information
 ---
- linkerd-viz.yaml | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ linkerd-viz.yaml | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/linkerd-viz.yaml b/linkerd-viz.yaml
-index b93d477..3649895 100644
+index 8237cea..c2a42e5 100644
 --- a/linkerd-viz.yaml
 +++ b/linkerd-viz.yaml
-@@ -423,6 +423,8 @@ spec:
+@@ -423,7 +423,8 @@ spec:
    client:
      # for kubelet probes and prometheus scraping
      unauthenticated: true
+-
 +    networks:
 +    - cidr: 0.0.0.0/0
- 
  ---
  apiVersion: policy.linkerd.io/v1beta1
-@@ -456,7 +458,8 @@ spec:
+ kind: Server
+@@ -456,7 +457,8 @@ spec:
    client:
      # for kubelet probes
      unauthenticated: true
@@ -33,7 +34,7 @@ index b93d477..3649895 100644
  ---
  ###
  ### Metrics API
-@@ -774,6 +777,8 @@ spec:
+@@ -774,6 +776,8 @@ spec:
    client:
      # web, prometheus and the kubelet probes
      unauthenticated: true
@@ -42,7 +43,16 @@ index b93d477..3649895 100644
  ---
  ###
  ### Prometheus
-@@ -1353,6 +1358,8 @@ spec:
+@@ -1157,6 +1161,8 @@ spec:
+   client:
+     # traffic coming from kube-api
+     unauthenticated: true
++    networks:
++    - cidr: 0.0.0.0/0
+ ---
+ ###
+ ### Tap Injector RBAC
+@@ -1353,6 +1359,8 @@ spec:
    client:
      # traffic coming from kube-api
      unauthenticated: true
@@ -51,7 +61,7 @@ index b93d477..3649895 100644
  ---
  ###
  ### Web
-@@ -1369,14 +1376,14 @@ metadata:
+@@ -1369,14 +1377,14 @@ metadata:
    annotations:
      linkerd.io/created-by: linkerd/helm stable-2.11.1
  spec:
@@ -68,7 +78,7 @@ index b93d477..3649895 100644
    - name: admin-http
      port: 9994
      targetPort: 9994
-@@ -1422,7 +1429,7 @@ spec:
+@@ -1422,7 +1430,7 @@ spec:
          - -viz-namespace=linkerd-viz
          - -log-level=info
          - -log-format=plain
@@ -78,5 +88,5 @@ index b93d477..3649895 100644
          imagePullPolicy: IfNotPresent
          livenessProbe:
 -- 
-2.30.2
+2.25.1
 
